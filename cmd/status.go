@@ -51,7 +51,7 @@ var statusCmd = &cobra.Command{
 		}
 
 		if !workstation_status.IsActive {
-			fmt.Println("No active workstation found, creating one now")
+			fmt.Println("No active workstation found")
 			return
 		}
 

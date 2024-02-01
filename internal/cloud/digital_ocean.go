@@ -71,3 +71,20 @@ func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
 
 	return error
 }
+
+func (p *DigitalOceanProvider) StartWorkstation(params *WorkstationStartParams) error {
+	return errors.New("Starting a workstation is not implemented yet")
+}
+
+func (p *DigitalOceanProvider) SaveWorkstation(params *WorkstationSaveParams) error {
+	return errors.New("Saving a workstation is not implemented yet")
+}
+
+func (p *DigitalOceanProvider) StopWorkstation(params *WorkstationStopParams) error {
+	return errors.New("Stopping a workstation is not implemented yet")
+}
+
+func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams) error {
+	_, err := p.client.Droplets.DeleteByTag(context.TODO(), "workstation")
+	return err
+}

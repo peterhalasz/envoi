@@ -1,11 +1,27 @@
 package cloud
 
 type CloudProvider interface {
-	InitWorkstation(params *WorkstationInitParams) error
 	GetStatus() (*WorkstationStatus, error)
+	InitWorkstation(params *WorkstationInitParams) error
+	StartWorkstation(params *WorkstationStartParams) error
+	SaveWorkstation(params *WorkstationSaveParams) error
+	StopWorkstation(params *WorkstationStopParams) error
+	DeleteWorkstation(params *WorkstationDeleteParams) error
 }
 
 type WorkstationInitParams struct {
+}
+
+type WorkstationStartParams struct {
+}
+
+type WorkstationSaveParams struct {
+}
+
+type WorkstationStopParams struct {
+}
+
+type WorkstationDeleteParams struct {
 }
 
 type WorkstationStatus struct {
