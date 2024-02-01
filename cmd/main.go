@@ -7,39 +7,12 @@ import (
 )
 
 // set up variables with droplet size, location, tag names, etc
-func init() {
-
-}
-
 // is the token correct, is there a (droplet, volume, snapshot)?
-func check() {
-
-}
-
 // create the volume, the droplet, a snapshot
-func create() {
-
-}
-
 // start the droplet with the snapshot, attach the volume
-func start() {
-
-}
-
 // create a snapshot of the droplet, delete the old one(s)
-func save() {
-
-}
-
 // stop the droplet and delete it
-func stop() {
-
-}
-
 // delete the droplet, snapshot, volume
-func delete() {
-
-}
 
 func print_workstation_info(w *cloud.WorkstationStatus) {
 	fmt.Printf("Name:\t %s\n", w.Name)
@@ -67,7 +40,14 @@ func main() {
 
 	if !workstation_status.IsActive {
 		fmt.Println("No active workstation found, creating one now")
-		provider.InitWorkstation(cloud.WorkstationInitParams{})
+
+		err := provider.InitWorkstation(&cloud.WorkstationInitParams{})
+
+		if err != nil {
+			fmt.Println("Error: Creating workstation")
+			fmt.Println(err)
+			return
+		}
 	}
 
 	print_workstation_info(workstation_status)

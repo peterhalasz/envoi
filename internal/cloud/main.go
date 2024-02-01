@@ -1,7 +1,7 @@
 package cloud
 
 type CloudProvider interface {
-	InitWorkstation(params WorkstationInitParams)
+	InitWorkstation(params *WorkstationInitParams) error
 	GetStatus() (*WorkstationStatus, error)
 }
 

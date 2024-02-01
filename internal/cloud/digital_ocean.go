@@ -58,7 +58,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 	}, nil
 }
 
-func (p *DigitalOceanProvider) InitWorkstation(_ WorkstationInitParams) {
+func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
 	dropletCreateRequest := &godo.DropletCreateRequest{
 		Name:   "workstation",
 		Tags:   []string{"workstation"},
@@ -67,5 +67,7 @@ func (p *DigitalOceanProvider) InitWorkstation(_ WorkstationInitParams) {
 		Region: "fra1",
 	}
 
-	p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
+	_, _, error := p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
+
+	return error
 }
