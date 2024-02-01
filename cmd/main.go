@@ -41,8 +41,34 @@ func delete() {
 
 }
 
+func print_workstation_info(w *cloud.WorkstationStatus) {
+	fmt.Printf("Name:\t %s\n", w.Name)
+	fmt.Printf("Memory:\t %d\n", w.Memory)
+	fmt.Printf("Cpus:\t %d\n", w.Cpus)
+	fmt.Printf("Disk:\t %d\n", w.Disk)
+	fmt.Printf("Region:\t %s\n", w.Region)
+	fmt.Printf("Image:\t %s\n", w.Image)
+	fmt.Printf("Size:\t %s\n", w.Size)
+	fmt.Printf("Status:\t %s\n", w.Status)
+	fmt.Printf("Since:\t %s\n", w.CreatedAt)
+	fmt.Printf("Volume:\t %s\n", w.Volume)
+}
+
 func main() {
 	provider := cloud.NewDigitalOceanProvider()
 
-	fmt.Println(provider.GetStatus().Name)
+	workstation_status, err := provider.GetStatus()
+
+	if err != nil {
+		fmt.Println("Error: Querying workstation status")
+		fmt.Println(err)
+		return
+	}
+
+	if !workstation_status.IsActive {
+		fmt.Println("No active workstation found, creating one now")
+		provider.InitWorkstation(cloud.WorkstationInitParams{})
+	}
+
+	print_workstation_info(workstation_status)
 }
