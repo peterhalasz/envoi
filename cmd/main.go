@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"os"
 
-	"github.com/digitalocean/godo"
+	"github.com/peterhalasz/cws/internal/cloud"
 )
 
 // set up variables with droplet size, location, tag names, etc
@@ -44,13 +42,7 @@ func delete() {
 }
 
 func main() {
-	token, _ := os.ReadFile("do_token")
-	client := godo.NewFromToken(string(token))
+	provider := cloud.NewDigitalOceanProvider()
 
-	droplets, _, _ := client.Droplets.List(context.TODO(), nil)
-
-	for _, droplet := range droplets {
-		fmt.Println(droplet.Name)
-	}
-
+	fmt.Println(provider.GetStatus().Name)
 }
