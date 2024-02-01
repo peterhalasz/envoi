@@ -43,6 +43,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 
 	return &WorkstationStatus{
 		IsActive:  true,
+		ID:        workstation_droplet.ID,
 		Name:      workstation_droplet.Name,
 		Memory:    workstation_droplet.Memory,
 		Cpus:      workstation_droplet.Vcpus,
@@ -59,12 +60,25 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 }
 
 func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
+	volumeCreateRequest := &godo.VolumeCreateRequest{
+		Name:          "workstationvolume",
+		Tags:          []string{"workstation"},
+		Region:        "fra1",
+		SizeGigaBytes: 5,
+	}
+	volume, _, err := p.client.Storage.CreateVolume(context.TODO(), volumeCreateRequest)
+
+	if err != nil {
+		return err
+	}
+
 	dropletCreateRequest := &godo.DropletCreateRequest{
-		Name:   "workstation",
-		Tags:   []string{"workstation"},
-		Size:   "s-1vcpu-512mb-10gb",
-		Image:  godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
-		Region: "fra1",
+		Name:    "workstationvm",
+		Tags:    []string{"workstation"},
+		Size:    "s-1vcpu-512mb-10gb",
+		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
+		Region:  "fra1",
+		Volumes: []godo.DropletCreateVolume{{ID: volume.ID}},
 	}
 
 	_, _, error := p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
@@ -84,7 +98,23 @@ func (p *DigitalOceanProvider) StopWorkstation(params *WorkstationStopParams) er
 	return errors.New("Stopping a workstation is not implemented yet")
 }
 
+// TODO: Detach volume, wait for it, then delete
 func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams) error {
-	_, err := p.client.Droplets.DeleteByTag(context.TODO(), "workstation")
+	status, _ := p.GetStatus()
+
+	_, _, err := p.client.StorageActions.DetachByDropletID(context.TODO(), status.Volume, status.ID)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = p.client.Droplets.DeleteByTag(context.TODO(), "workstation")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = p.client.Storage.DeleteVolume(context.TODO(), status.Volume)
+
 	return err
 }

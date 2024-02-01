@@ -26,6 +26,7 @@ type WorkstationDeleteParams struct {
 
 type WorkstationStatus struct {
 	IsActive  bool
+	ID        int
 	Name      string
 	Memory    int
 	Cpus      int

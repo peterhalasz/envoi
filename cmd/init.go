@@ -14,7 +14,7 @@ func init() {
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialise a workstation",
-	Long:  `Creates a new workstation if there is none and prints its status`,
+	Long:  `Creates a new virtual machine and a volume if there is none and prints their status`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := cloud.NewDigitalOceanProvider()
 
@@ -37,7 +37,7 @@ var initCmd = &cobra.Command{
 				return
 			}
 		} else {
-			fmt.Println("There's already and active workstation")
+			fmt.Println("There's already an active workstation")
 		}
 
 		print_workstation_info(workstation_status)

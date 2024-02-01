@@ -12,6 +12,7 @@ func init() {
 }
 
 func print_workstation_info(w *cloud.WorkstationStatus) {
+	fmt.Printf("ID:\t %d\n", w.ID)
 	fmt.Printf("Name:\t %s\n", w.Name)
 	fmt.Printf("Memory:\t %d\n", w.Memory)
 	fmt.Printf("Cpus:\t %d\n", w.Cpus)
@@ -28,6 +29,7 @@ var statusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Print the status of your workstation",
 	Long: `Print the following information of your running workstation:
+          ID - The ID of the machine
           Name - The name of the machine
           Memory - Size or RAM
           Cpus - Number of CPUs
