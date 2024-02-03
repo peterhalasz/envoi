@@ -6,8 +6,14 @@ import (
 	"os"
 	"strings"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/digitalocean/godo"
 )
+
+func init() {
+	log.SetLevel(log.DebugLevel)
+}
 
 type DigitalOceanProvider struct {
 	client *godo.Client
@@ -26,6 +32,7 @@ func NewDigitalOceanProvider() *DigitalOceanProvider {
 }
 
 func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
+	log.Debugf("Fetching Droplets by tag: %s", "workstation")
 	droplets, _, err := p.client.Droplets.ListByTag(context.TODO(), "workstation", nil)
 	if err != nil {
 		return nil, err
