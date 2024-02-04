@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/peterhalasz/cws/cmd"
+	"github.com/peterhalasz/envoi/cmd"
 )
 
 func main() {

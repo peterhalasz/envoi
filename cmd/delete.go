@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/peterhalasz/cws/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/spf13/cobra"
 )
 

@@ -8,9 +8,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "cws",
-	Short: "Cloud Workstation Manager",
-	Long: `Cloud workstation manager
+	Use:   "envoi",
+	Short: "envoi - Cloud Workstation Manager",
+	Long: `envoi - Cloud workstation manager
                 blablabla
                 More text`,
 	Run: func(cmd *cobra.Command, args []string) {

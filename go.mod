@@ -1,4 +1,4 @@
-module github.com/peterhalasz/cws
+module github.com/peterhalasz/envoi
 
 go 1.20
 

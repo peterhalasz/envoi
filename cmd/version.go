@@ -12,9 +12,9 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of cws",
-	Long:  `Print the version number of cws`,
+	Short: "Print the version number of envoi",
+	Long:  `Print the version number of envoi`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Cloud Workstation Manager v0.1")
+		fmt.Println("envoi - v0.1")
 	},
 }

@@ -1,3 +1,3 @@
 all:: build
 build:
-	go build -o cws ./main.go
+	go build -o envoi ./main.go
