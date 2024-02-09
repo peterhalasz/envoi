@@ -7,9 +7,11 @@ type CloudProvider interface {
 	SaveWorkstation(params *WorkstationSaveParams) error
 	StopWorkstation(params *WorkstationStopParams) error
 	DeleteWorkstation(params *WorkstationDeleteParams) error
+	ConnectWorkstation(params *WorkstationConnectParams) error
 }
 
 type WorkstationInitParams struct {
+	SshKeyFingerprint string
 }
 
 type WorkstationStartParams struct {
@@ -22,6 +24,9 @@ type WorkstationStopParams struct {
 }
 
 type WorkstationDeleteParams struct {
+}
+
+type WorkstationConnectParams struct {
 }
 
 type WorkstationStatus struct {

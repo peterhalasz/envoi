@@ -69,7 +69,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 	}, nil
 }
 
-func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
+func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) error {
 	volumeCreateRequest := &godo.VolumeCreateRequest{
 		Name:          "workstationvolume",
 		Tags:          []string{"workstation"},
@@ -89,6 +89,7 @@ func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
 		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
 		Region:  "fra1",
 		Volumes: []godo.DropletCreateVolume{{ID: volume.ID}},
+		SSHKeys: []godo.DropletCreateSSHKey{{ID: 33688683}},
 	}
 
 	_, _, err = p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
@@ -115,6 +116,10 @@ func (p *DigitalOceanProvider) SaveWorkstation(params *WorkstationSaveParams) er
 
 func (p *DigitalOceanProvider) StopWorkstation(params *WorkstationStopParams) error {
 	return errors.New("Stopping a workstation is not implemented yet")
+}
+
+func (p *DigitalOceanProvider) ConnectWorkstation(params *WorkstationConnectParams) error {
+	return errors.New("Connecting to a workstation is not implemented yet")
 }
 
 func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams) error {

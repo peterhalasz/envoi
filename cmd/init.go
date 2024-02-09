@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/spf13/cobra"
@@ -28,7 +29,11 @@ var initCmd = &cobra.Command{
 		if !workstation_status.IsActive {
 			fmt.Println("Creating a workstation")
 
-			err := provider.InitWorkstation(&cloud.WorkstationInitParams{})
+			sshKeyFingerPrint, _ := os.ReadFile("do_ssh_fingerprint")
+
+			err := provider.InitWorkstation(&cloud.WorkstationInitParams{
+				SshKeyFingerprint: string(sshKeyFingerPrint),
+			})
 
 			if err != nil {
 				fmt.Println("Error: Creating workstation")
