@@ -19,7 +19,6 @@ var initCmd = &cobra.Command{
 		provider := cloud.NewDigitalOceanProvider()
 
 		workstation_status, err := provider.GetStatus()
-
 		if err != nil {
 			fmt.Println("Error: Querying workstation status")
 			fmt.Println(err)
@@ -27,7 +26,7 @@ var initCmd = &cobra.Command{
 		}
 
 		if !workstation_status.IsActive {
-			fmt.Println("No active workstation found, creating one now")
+			fmt.Println("Creating a workstation")
 
 			err := provider.InitWorkstation(&cloud.WorkstationInitParams{})
 
@@ -40,6 +39,7 @@ var initCmd = &cobra.Command{
 			fmt.Println("There's already an active workstation")
 		}
 
+		// TODO: Wait until machine is ready to use
 		print_workstation_info(workstation_status)
 	},
 }

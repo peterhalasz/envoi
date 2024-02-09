@@ -36,7 +36,6 @@ var deleteCmd = &cobra.Command{
 			fmt.Println("No active workstation found")
 			return
 		} else {
-			fmt.Println("There's an active workstation")
 			if !Sure {
 				fmt.Println("Re-run the command with --sure to delete it")
 			} else {

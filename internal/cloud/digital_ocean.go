@@ -91,9 +91,18 @@ func (p *DigitalOceanProvider) InitWorkstation(_ *WorkstationInitParams) error {
 		Volumes: []godo.DropletCreateVolume{{ID: volume.ID}},
 	}
 
-	_, _, error := p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
+	_, _, err = p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
 
-	return error
+	if err != nil {
+		log.Debugf("Error %s", err.Error())
+		return err
+	}
+
+	// TODO: Wait until machine is up instead of sleeping
+	log.Debugf("Sleeping for 30 seconds")
+	time.Sleep(30 * time.Second)
+
+	return nil
 }
 
 func (p *DigitalOceanProvider) StartWorkstation(params *WorkstationStartParams) error {
@@ -108,7 +117,6 @@ func (p *DigitalOceanProvider) StopWorkstation(params *WorkstationStopParams) er
 	return errors.New("Stopping a workstation is not implemented yet")
 }
 
-// TODO: Wait until the workstation (and the volume) is 5 minutes old at last before deleting
 func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams) error {
 	status, _ := p.GetStatus()
 	if !status.IsActive {
