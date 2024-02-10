@@ -42,4 +42,5 @@ type WorkstationStatus struct {
 	Status    string
 	CreatedAt string
 	Volume    string
+	IPv4      string
 }

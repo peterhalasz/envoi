@@ -51,6 +51,13 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 
 	workstation_droplet := droplets[0]
 
+	publicIpV4, err := workstation_droplet.PublicIPv4()
+
+	if err != nil {
+		log.Debugf("Could not fetch public IPv4", err)
+		publicIpV4 = ""
+	}
+
 	return &WorkstationStatus{
 		IsActive:  true,
 		ID:        workstation_droplet.ID,
@@ -66,6 +73,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 		// TODO: Only one volume should be allowed
 		// TODO: Display None if there's no volume attached
 		Volume: strings.Join(workstation_droplet.VolumeIDs[:], ","),
+		IPv4:   publicIpV4,
 	}, nil
 }
 
@@ -170,7 +178,7 @@ func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams
 		log.Debugf("Error %s", err.Error())
 		return err
 	}
-	log.Debugf("Volume %s deleted", status.ID)
+	log.Debugf("Volume %d deleted", status.ID)
 
 	return err
 }

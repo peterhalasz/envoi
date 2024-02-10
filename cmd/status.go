@@ -23,6 +23,7 @@ func print_workstation_info(w *cloud.WorkstationStatus) {
 	fmt.Printf("Status:\t %s\n", w.Status)
 	fmt.Printf("Since:\t %s\n", w.CreatedAt)
 	fmt.Printf("Volume:\t %s\n", w.Volume)
+	fmt.Printf("IP:\t %s\n", w.IPv4)
 }
 
 var statusCmd = &cobra.Command{
@@ -40,6 +41,7 @@ var statusCmd = &cobra.Command{
           Status - Status...
           Since - Timestamp of the workstation's creation
           Volume - Attached volume IDs
+          IP - Public IPv4 address of the machine
           `,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := cloud.NewDigitalOceanProvider()
