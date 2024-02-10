@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
+	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/spf13/cobra"
 )
 
@@ -16,13 +18,21 @@ var connectCmd = &cobra.Command{
 	Short: "Connect to the workstation",
 	Long:  `Connects to the workstation via ssh`,
 	Run: func(cmd *cobra.Command, args []string) {
+		provider := cloud.NewDigitalOceanProvider()
 
-		scmd := exec.Command("ssh", "root@164.92.176.95")
+		workstation_status, err := provider.GetStatus()
+		if err != nil {
+			fmt.Println("Error: Querying workstation status")
+			fmt.Println(err)
+			return
+		}
+
+		scmd := exec.Command("ssh", fmt.Sprintf("root@%s", workstation_status.IPv4))
 		scmd.Stdin = os.Stdin
 		scmd.Stdout = os.Stdout
 		scmd.Stderr = os.Stderr
 
-		err := scmd.Run()
+		err = scmd.Run()
 		if err != nil {
 			panic(err)
 		}

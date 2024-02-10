@@ -29,10 +29,21 @@ var initCmd = &cobra.Command{
 		if !workstation_status.IsActive {
 			fmt.Println("Creating a workstation")
 
-			sshKeyFingerPrint, _ := os.ReadFile("do_ssh_fingerprint")
+			homeDir, err := os.UserHomeDir()
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 
-			err := provider.InitWorkstation(&cloud.WorkstationInitParams{
-				SshKeyFingerprint: string(sshKeyFingerPrint),
+			sshPubKey, err := os.ReadFile(homeDir + "/.ssh/id_rsa.pub")
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			err = provider.InitWorkstation(&cloud.WorkstationInitParams{
+				SshPubKey: string(sshPubKey),
 			})
 
 			if err != nil {
@@ -44,7 +55,12 @@ var initCmd = &cobra.Command{
 			fmt.Println("There's already an active workstation")
 		}
 
-		// TODO: Wait until machine is ready to use
+		workstation_status, err = provider.GetStatus()
+		if err != nil {
+			fmt.Println("Error: Querying workstation status")
+			fmt.Println(err)
+			return
+		}
 		print_workstation_info(workstation_status)
 	},
 }

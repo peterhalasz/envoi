@@ -11,7 +11,7 @@ type CloudProvider interface {
 }
 
 type WorkstationInitParams struct {
-	SshKeyFingerprint string
+	SshPubKey string
 }
 
 type WorkstationStartParams struct {

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/digitalocean/godo"
@@ -46,7 +47,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 	}
 
 	if len(droplets) > 1 {
-		return nil, errors.New("Only one workstation droplet should exist at a time")
+		return nil, errors.New(fmt.Sprintf("Only one workstation droplet should exist at a time. You have %d", len(droplets)))
 	}
 
 	workstation_droplet := droplets[0]
@@ -77,7 +78,44 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 	}, nil
 }
 
+func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
+	log.Debug("Fetching ssh keys for current fingerprint")
+	sshKeyFingerPrint, err := util.GetSshKeyFingerprint(sshPubKey)
+
+	key, _, err := p.client.Keys.GetByFingerprint(context.TODO(), sshKeyFingerPrint)
+
+	if err != nil {
+		log.Debug("Can't fetch SSH keys")
+		return 0, err
+	}
+
+	if sshKeyFingerPrint == key.Fingerprint {
+		log.Debug(fmt.Sprintf("Reusing current ssh key with fingerprint: %s", sshKeyFingerPrint))
+		return key.ID, nil
+	} else {
+		log.Debug("Creating new SSH key")
+		key, _, err = p.client.Keys.Create(context.TODO(), &godo.KeyCreateRequest{
+			Name:      "envoi-ssh",
+			PublicKey: sshPubKey,
+		})
+
+		if err != nil {
+			log.Debug("Creating SSH key has failed")
+			return 0, err
+		}
+
+		return key.ID, nil
+	}
+}
+
 func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) error {
+	sshKeyId, err := p.getSshKeyId(params.SshPubKey)
+
+	if err != nil {
+		return err
+	}
+
+	log.Debug("Creating new volume")
 	volumeCreateRequest := &godo.VolumeCreateRequest{
 		Name:          "workstationvolume",
 		Tags:          []string{"workstation"},
@@ -87,9 +125,11 @@ func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) er
 	volume, _, err := p.client.Storage.CreateVolume(context.TODO(), volumeCreateRequest)
 
 	if err != nil {
+		log.Debug("Creating volume has failed")
 		return err
 	}
 
+	log.Debug("Creating new droplet")
 	dropletCreateRequest := &godo.DropletCreateRequest{
 		Name:    "workstationvm",
 		Tags:    []string{"workstation"},
@@ -97,7 +137,7 @@ func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) er
 		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
 		Region:  "fra1",
 		Volumes: []godo.DropletCreateVolume{{ID: volume.ID}},
-		SSHKeys: []godo.DropletCreateSSHKey{{ID: 33688683}},
+		SSHKeys: []godo.DropletCreateSSHKey{{ID: sshKeyId}},
 	}
 
 	_, _, err = p.client.Droplets.Create(context.TODO(), dropletCreateRequest)
