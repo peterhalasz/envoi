@@ -117,10 +117,12 @@ func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) er
 
 	log.Debug("Creating new volume")
 	volumeCreateRequest := &godo.VolumeCreateRequest{
-		Name:          "workstationvolume",
-		Tags:          []string{"workstation"},
-		Region:        "fra1",
-		SizeGigaBytes: 5,
+		Name:            "envoi",
+		Tags:            []string{"workstation"},
+		Region:          "fra1",
+		FilesystemType:  "ext4",
+		FilesystemLabel: "envoi",
+		SizeGigaBytes:   5,
 	}
 	volume, _, err := p.client.Storage.CreateVolume(context.TODO(), volumeCreateRequest)
 
@@ -129,9 +131,13 @@ func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) er
 		return err
 	}
 
+	// TODO: Wait until volume is up instead of sleeping
+	log.Debugf("Sleeping for 5 seconds")
+	time.Sleep(5 * time.Second)
+
 	log.Debug("Creating new droplet")
 	dropletCreateRequest := &godo.DropletCreateRequest{
-		Name:    "workstationvm",
+		Name:    "envoi",
 		Tags:    []string{"workstation"},
 		Size:    "s-1vcpu-512mb-10gb",
 		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
@@ -177,7 +183,6 @@ func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams
 		return nil
 	}
 
-	fmt.Println(status.CreatedAt)
 	now := time.Now()
 	created, _ := time.Parse(time.RFC3339, status.CreatedAt)
 
