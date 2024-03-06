@@ -63,16 +63,8 @@ func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 	}
 }
 
-func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartParams) error {
-	return errors.New("Starting a workstation is not implemented yet")
-}
-
 func (p *DigitalOceanProvider) SaveWorkstation(params *cloud.WorkstationSaveParams) error {
 	return errors.New("Saving a workstation is not implemented yet")
-}
-
-func (p *DigitalOceanProvider) StopWorkstation(params *cloud.WorkstationStopParams) error {
-	return errors.New("Stopping a workstation is not implemented yet")
 }
 
 func (p *DigitalOceanProvider) ConnectWorkstation(params *cloud.WorkstationConnectParams) error {

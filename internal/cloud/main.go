@@ -15,6 +15,7 @@ type WorkstationInitParams struct {
 }
 
 type WorkstationStartParams struct {
+	SshPubKey string
 }
 
 type WorkstationSaveParams struct {
