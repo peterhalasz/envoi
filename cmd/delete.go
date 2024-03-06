@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/peterhalasz/envoi/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +22,7 @@ var deleteCmd = &cobra.Command{
           - Snapshot(s)
           - Volumes`,
 	Run: func(cmd *cobra.Command, args []string) {
-		provider := cloud.NewDigitalOceanProvider()
+		provider := digitalocean.NewDigitalOceanProvider()
 
 		workstation_status, err := provider.GetStatus()
 

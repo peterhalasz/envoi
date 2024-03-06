@@ -1,4 +1,4 @@
-package cloud
+package digitalocean
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 
@@ -23,7 +24,7 @@ type DigitalOceanProvider struct {
 	client *godo.Client
 }
 
-var _ CloudProvider = &DigitalOceanProvider{}
+var _ cloud.CloudProvider = &DigitalOceanProvider{}
 
 func NewDigitalOceanProvider() *DigitalOceanProvider {
 	p := &DigitalOceanProvider{}
@@ -35,7 +36,7 @@ func NewDigitalOceanProvider() *DigitalOceanProvider {
 	return p
 }
 
-func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
+func (p *DigitalOceanProvider) GetStatus() (*cloud.WorkstationStatus, error) {
 	log.Debugf("Fetching Droplets by tag: %s", "workstation")
 	droplets, _, err := p.client.Droplets.ListByTag(context.TODO(), "workstation", nil)
 	if err != nil {
@@ -43,7 +44,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 	}
 
 	if len(droplets) == 0 {
-		return &WorkstationStatus{IsActive: false}, nil
+		return &cloud.WorkstationStatus{IsActive: false}, nil
 	}
 
 	if len(droplets) > 1 {
@@ -59,7 +60,7 @@ func (p *DigitalOceanProvider) GetStatus() (*WorkstationStatus, error) {
 		publicIpV4 = ""
 	}
 
-	return &WorkstationStatus{
+	return &cloud.WorkstationStatus{
 		IsActive:  true,
 		ID:        workstation_droplet.ID,
 		Name:      workstation_droplet.Name,
@@ -108,7 +109,7 @@ func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 	}
 }
 
-func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) error {
+func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitParams) error {
 	sshKeyId, err := p.getSshKeyId(params.SshPubKey)
 
 	if err != nil {
@@ -160,23 +161,23 @@ func (p *DigitalOceanProvider) InitWorkstation(params *WorkstationInitParams) er
 	return nil
 }
 
-func (p *DigitalOceanProvider) StartWorkstation(params *WorkstationStartParams) error {
+func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartParams) error {
 	return errors.New("Starting a workstation is not implemented yet")
 }
 
-func (p *DigitalOceanProvider) SaveWorkstation(params *WorkstationSaveParams) error {
+func (p *DigitalOceanProvider) SaveWorkstation(params *cloud.WorkstationSaveParams) error {
 	return errors.New("Saving a workstation is not implemented yet")
 }
 
-func (p *DigitalOceanProvider) StopWorkstation(params *WorkstationStopParams) error {
+func (p *DigitalOceanProvider) StopWorkstation(params *cloud.WorkstationStopParams) error {
 	return errors.New("Stopping a workstation is not implemented yet")
 }
 
-func (p *DigitalOceanProvider) ConnectWorkstation(params *WorkstationConnectParams) error {
+func (p *DigitalOceanProvider) ConnectWorkstation(params *cloud.WorkstationConnectParams) error {
 	return errors.New("Connecting to a workstation is not implemented yet")
 }
 
-func (p *DigitalOceanProvider) DeleteWorkstation(params *WorkstationDeleteParams) error {
+func (p *DigitalOceanProvider) DeleteWorkstation(params *cloud.WorkstationDeleteParams) error {
 	status, _ := p.GetStatus()
 	if !status.IsActive {
 		fmt.Println("Nothing to delete, there is no active workstation")

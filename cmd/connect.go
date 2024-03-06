@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/peterhalasz/envoi/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +18,7 @@ var connectCmd = &cobra.Command{
 	Short: "Connect to the workstation",
 	Long:  `Connects to the workstation via ssh`,
 	Run: func(cmd *cobra.Command, args []string) {
-		provider := cloud.NewDigitalOceanProvider()
+		provider := digitalocean.NewDigitalOceanProvider()
 
 		workstation_status, err := provider.GetStatus()
 		if err != nil {

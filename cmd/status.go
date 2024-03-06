@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/peterhalasz/envoi/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +45,7 @@ var statusCmd = &cobra.Command{
           IP - Public IPv4 address of the machine
           `,
 	Run: func(cmd *cobra.Command, args []string) {
-		provider := cloud.NewDigitalOceanProvider()
+		provider := digitalocean.NewDigitalOceanProvider()
 
 		workstation_status, err := provider.GetStatus()
 
