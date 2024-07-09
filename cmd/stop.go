@@ -8,8 +8,7 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
-	deleteCmd.Flags().BoolVarP(&Sure, "sure", "s", false, "are you sure?")
+	rootCmd.AddCommand(stopCmd)
 }
 
 var stopCmd = &cobra.Command{

@@ -10,8 +10,7 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
-	deleteCmd.Flags().BoolVarP(&Sure, "sure", "s", false, "are you sure?")
+	rootCmd.AddCommand(startCmd)
 }
 
 var startCmd = &cobra.Command{
