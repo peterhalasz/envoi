@@ -16,7 +16,7 @@ func init() {
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start a workstation",
-	Long:  `Start the virtual machine and keep the volumes and snapshots`,
+	Long:  `Start the virtual machine and attach its volume`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
 
