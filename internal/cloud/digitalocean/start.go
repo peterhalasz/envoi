@@ -38,13 +38,14 @@ func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartPa
 
 	log.Debug("Creating new droplet")
 	dropletCreateRequest := &godo.DropletCreateRequest{
-		Name:    "envoi",
-		Tags:    []string{"workstation"},
-		Size:    "s-1vcpu-512mb-10gb",
-		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
-		Region:  "fra1",
-		Volumes: []godo.DropletCreateVolume{{ID: volumeId}},
-		SSHKeys: []godo.DropletCreateSSHKey{{ID: sshKeyId}},
+		Name:     "envoi",
+		Tags:     []string{"workstation"},
+		Size:     "s-1vcpu-512mb-10gb",
+		Image:    godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
+		Region:   "fra1",
+		Volumes:  []godo.DropletCreateVolume{{ID: volumeId}},
+		SSHKeys:  []godo.DropletCreateSSHKey{{ID: sshKeyId}},
+		UserData: "#!/bin/bash\nsudo mkdir /mnt/envoi\nsudo mount -o defaults,nofail,discard,noatime /dev/disk/by-label/envoi /mnt/envoi\n",
 	}
 
 	_, _, err = p.client.Droplets.Create(context.TODO(), dropletCreateRequest)

@@ -23,3 +23,4 @@ go.work
 envoi
 do_token
 do_ssh_fingerprint
+.vscode
