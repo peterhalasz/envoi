@@ -2,7 +2,6 @@ package digitalocean
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -22,7 +21,7 @@ func (p *DigitalOceanProvider) GetStatus() (*cloud.WorkstationStatus, error) {
 	}
 
 	if len(droplets) > 1 {
-		return nil, errors.New(fmt.Sprintf("Only one workstation droplet should exist at a time. You have %d", len(droplets)))
+		return nil, fmt.Errorf("only one workstation droplet should exist at a time. You have %d", len(droplets))
 	}
 
 	workstation_droplet := droplets[0]
@@ -30,7 +29,7 @@ func (p *DigitalOceanProvider) GetStatus() (*cloud.WorkstationStatus, error) {
 	publicIpV4, err := workstation_droplet.PublicIPv4()
 
 	if err != nil {
-		log.Debugf("Could not fetch public IPv4", err)
+		log.Debug("Could not fetch public IPv4", err)
 		publicIpV4 = ""
 	}
 

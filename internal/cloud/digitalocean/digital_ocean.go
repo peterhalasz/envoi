@@ -37,6 +37,11 @@ func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 	log.Debug("Fetching ssh keys for current fingerprint")
 	sshKeyFingerPrint, err := util.GetSshKeyFingerprint(sshPubKey)
 
+	if err != nil {
+		log.Debug("Can't get SSH key fingerprint")
+		return 0, err
+	}
+
 	key, _, err := p.client.Keys.GetByFingerprint(context.TODO(), sshKeyFingerPrint)
 
 	if err != nil {
@@ -64,9 +69,9 @@ func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 }
 
 func (p *DigitalOceanProvider) SaveWorkstation(params *cloud.WorkstationSaveParams) error {
-	return errors.New("Saving a workstation is not implemented yet")
+	return errors.New("saving a workstation is not implemented yet")
 }
 
 func (p *DigitalOceanProvider) ConnectWorkstation(params *cloud.WorkstationConnectParams) error {
-	return errors.New("Connecting to a workstation is not implemented yet")
+	return errors.New("connecting to a workstation is not implemented yet")
 }
