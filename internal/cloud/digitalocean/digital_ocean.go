@@ -23,10 +23,33 @@ type DigitalOceanProvider struct {
 
 var _ cloud.CloudProvider = &DigitalOceanProvider{}
 
+func readTokenFromFile(filePath string) (string, error) {
+	token, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(token), nil
+}
+
+func readTokenFromEnv() (string, error) {
+	token := os.Getenv("DO_TOKEN")
+	if token == "" {
+		return "", errors.New("DO_TOKEN environment variable is not set")
+	}
+	return token, nil
+}
+
 func NewDigitalOceanProvider() *DigitalOceanProvider {
 	p := &DigitalOceanProvider{}
-	token, _ := os.ReadFile("do_token")
-	client := godo.NewFromToken(string(token))
+
+	token, err := readTokenFromEnv()
+
+	if err != nil {
+		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file.")
+		token, _ = readTokenFromFile("do_token")
+	}
+
+	client := godo.NewFromToken(token)
 
 	p.client = client
 
