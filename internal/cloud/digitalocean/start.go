@@ -9,6 +9,7 @@ import (
 	"github.com/digitalocean/godo"
 	"github.com/peterhalasz/envoi/internal/cloud"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartParams) error {
@@ -26,7 +27,7 @@ func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartPa
 
 	var volumeId string
 	for _, volume := range volumeList {
-		if slices.Contains(volume.Tags, "workstation") {
+		if slices.Contains(volume.Tags, viper.GetString("digitalocean.tag")) {
 			log.Debug("Workstation volume found")
 			volumeId = volume.ID
 		}
@@ -38,11 +39,11 @@ func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartPa
 
 	log.Debug("Creating new droplet")
 	dropletCreateRequest := &godo.DropletCreateRequest{
-		Name:     "envoi",
-		Tags:     []string{"workstation"},
-		Size:     "s-1vcpu-512mb-10gb",
-		Image:    godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
-		Region:   "fra1",
+		Name:     viper.GetString("digitalocean.droplet.name"),
+		Tags:     []string{viper.GetString("digitalocean.tag")},
+		Size:     viper.GetString("digitalocean.droplet.size"),
+		Image:    godo.DropletCreateImage{Slug: viper.GetString("digitalocean.droplet.image")},
+		Region:   viper.GetString("digitalocean.region"),
 		Volumes:  []godo.DropletCreateVolume{{ID: volumeId}},
 		SSHKeys:  []godo.DropletCreateSSHKey{{ID: sshKeyId}},
 		UserData: "#!/bin/bash\nsudo mkdir /mnt/envoi\nsudo mount -o defaults,nofail,discard,noatime /dev/disk/by-label/envoi /mnt/envoi\n",

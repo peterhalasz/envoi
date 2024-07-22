@@ -20,12 +20,12 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 
 	log.Debug("Creating new volume")
 	volumeCreateRequest := &godo.VolumeCreateRequest{
-		Name:            "envoi",
-		Tags:            []string{"workstation"},
-		Region:          "fra1",
-		FilesystemType:  "ext4",
-		FilesystemLabel: "envoi",
-		SizeGigaBytes:   int64(viper.GetInt("volume_size_gb")),
+		Name:            viper.GetString("digitalocean.volume.name"),
+		Tags:            []string{viper.GetString("digitalocean.tag")},
+		Region:          viper.GetString("digitalocean.region"),
+		FilesystemType:  viper.GetString("digitalocean.volume.filesystem_type"),
+		FilesystemLabel: viper.GetString("digitalocean.volume.filesystem_label"),
+		SizeGigaBytes:   viper.GetInt64("digitalocean.volume.size_gb"),
 	}
 	volume, _, err := p.client.Storage.CreateVolume(context.TODO(), volumeCreateRequest)
 
@@ -40,11 +40,11 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 
 	log.Debug("Creating new droplet")
 	dropletCreateRequest := &godo.DropletCreateRequest{
-		Name:    "envoi",
-		Tags:    []string{"workstation"},
-		Size:    "s-1vcpu-512mb-10gb",
-		Image:   godo.DropletCreateImage{Slug: "ubuntu-23-10-x64"},
-		Region:  "fra1",
+		Name:    viper.GetString("digitalocean.droplet.name"),
+		Tags:    []string{viper.GetString("digitalocean.tag")},
+		Size:    viper.GetString("digitalocean.droplet.size"),
+		Image:   godo.DropletCreateImage{Slug: viper.GetString("digitalocean.droplet.image")},
+		Region:  viper.GetString("digitalocean.region"),
 		Volumes: []godo.DropletCreateVolume{{ID: volume.ID}},
 		SSHKeys: []godo.DropletCreateSSHKey{{ID: sshKeyId}},
 	}
