@@ -6,6 +6,7 @@ import (
 
 	"github.com/peterhalasz/envoi/internal/cloud"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/digitalocean/godo"
 )
@@ -24,7 +25,7 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 		Region:          "fra1",
 		FilesystemType:  "ext4",
 		FilesystemLabel: "envoi",
-		SizeGigaBytes:   5,
+		SizeGigaBytes:   int64(viper.GetInt("volume_size_gb")),
 	}
 	volume, _, err := p.client.Storage.CreateVolume(context.TODO(), volumeCreateRequest)
 
