@@ -8,6 +8,7 @@ import (
 
 	"github.com/peterhalasz/envoi/internal/cloud"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func (p *DigitalOceanProvider) StopWorkstation(params *cloud.WorkstationStopParams) error {
@@ -27,20 +28,22 @@ func (p *DigitalOceanProvider) StopWorkstation(params *cloud.WorkstationStopPara
 		return fmt.Errorf("workstation can't be deleted until at least 5 minutes old. Current age: %d minutes", workstation_age_minutes)
 	}
 
-	log.Debugf("Detaching droplet %d from volume %s", status.ID, status.Volume)
-	_, _, err := p.client.StorageActions.DetachByDropletID(context.TODO(), status.Volume, status.ID)
+	if viper.GetBool("digitalocean.volume.enabled") {
+		log.Debugf("Detaching droplet %d from volume %s", status.ID, status.Volume)
+		_, _, err := p.client.StorageActions.DetachByDropletID(context.TODO(), status.Volume, status.ID)
 
-	if err != nil {
-		log.Debugf("Error %s", err.Error())
-		return err
+		if err != nil {
+			log.Debugf("Error %s", err.Error())
+			return err
+		}
+		log.Debugf("Workstation %d detached from volume %s", status.ID, status.Volume)
+
+		log.Debugf("Sleeping for 5 seconds")
+		time.Sleep(5 * time.Second)
 	}
-	log.Debugf("Workstation %d detached from volume %s", status.ID, status.Volume)
-
-	log.Debugf("Sleeping for 5 seconds")
-	time.Sleep(5 * time.Second)
 
 	log.Debugf("Deleting droplet %d", status.ID)
-	_, err = p.client.Droplets.Delete(context.TODO(), status.ID)
+	_, err := p.client.Droplets.Delete(context.TODO(), status.ID)
 
 	if err != nil {
 		log.Debugf("Error %s", err.Error())
