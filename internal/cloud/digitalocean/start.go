@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"slices"
-	"time"
 
 	"github.com/digitalocean/godo"
 	"github.com/peterhalasz/envoi/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -63,8 +63,7 @@ func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartPa
 	}
 
 	// TODO: Wait until machine is up instead of sleeping
-	log.Debugf("Sleeping for 30 seconds")
-	time.Sleep(30 * time.Second)
+	util.SleepWithSpinner(30)
 
 	return nil
 }

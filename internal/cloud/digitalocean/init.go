@@ -2,9 +2,9 @@ package digitalocean
 
 import (
 	"context"
-	"time"
 
 	"github.com/peterhalasz/envoi/internal/cloud"
+	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
@@ -47,8 +47,7 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 		}
 
 		// TODO: Wait until volume is up instead of sleeping
-		log.Debugf("Sleeping for 5 seconds")
-		time.Sleep(5 * time.Second)
+		util.SleepWithSpinner(5)
 	}
 
 	log.Debug("Creating new droplet")
@@ -60,8 +59,7 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 	}
 
 	// TODO: Wait until machine is up instead of sleeping
-	log.Debugf("Sleeping for 30 seconds")
-	time.Sleep(30 * time.Second)
+	util.SleepWithSpinner(30)
 
 	return nil
 }
