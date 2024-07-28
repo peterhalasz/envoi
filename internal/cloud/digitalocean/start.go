@@ -8,7 +8,6 @@ import (
 
 	"github.com/digitalocean/godo"
 	"github.com/peterhalasz/envoi/internal/cloud"
-	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -62,8 +61,7 @@ func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartPa
 		return err
 	}
 
-	// TODO: Wait until machine is up instead of sleeping
-	util.SleepWithSpinner(30)
+	waitForWorkstationToBecomeActive(*p)
 
 	return nil
 }

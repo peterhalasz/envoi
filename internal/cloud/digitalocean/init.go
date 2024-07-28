@@ -46,7 +46,6 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 			return err
 		}
 
-		// TODO: Wait until volume is up instead of sleeping
 		util.SleepWithSpinner(5)
 	}
 
@@ -58,8 +57,12 @@ func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitPara
 		return err
 	}
 
-	// TODO: Wait until machine is up instead of sleeping
-	util.SleepWithSpinner(30)
+	err = waitForWorkstationToBecomeActive(*p)
 
+	if err != nil {
+		return err
+	}
+
+	log.Debug("Droplet is active")
 	return nil
 }
