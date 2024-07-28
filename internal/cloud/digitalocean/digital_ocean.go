@@ -46,7 +46,14 @@ func NewDigitalOceanProvider() *DigitalOceanProvider {
 
 	if err != nil {
 		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file.")
-		token, _ = readTokenFromFile("do_token")
+		token, err = readTokenFromFile("do_token")
+
+		if err != nil {
+			log.Debug("Can't read DigitalOcean token from file.")
+			panic("Can't read DigitalOcean token from environment or file")
+		}
+
+		log.Debug("DigitalOcean token read from file")
 	}
 
 	client := godo.NewFromToken(token)
