@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
+	"github.com/peterhalasz/envoi/internal/util"
 	"github.com/spf13/cobra"
 )
 
@@ -27,15 +28,25 @@ var connectCmd = &cobra.Command{
 			return
 		}
 
-		scmd := exec.Command("ssh", fmt.Sprintf("root@%s", workstation_status.IPv4))
-		scmd.Stdin = os.Stdin
-		scmd.Stdout = os.Stdout
-		scmd.Stderr = os.Stderr
+		const maxRetries = 5
+		for try := 0; try < maxRetries; try++ {
+			scmd := exec.Command("ssh", fmt.Sprintf("root@%s", workstation_status.IPv4))
+			scmd.Stdin = os.Stdin
+			scmd.Stdout = os.Stdout
+			scmd.Stderr = os.Stderr
 
-		err = scmd.Run()
-		if err != nil {
-			fmt.Println("Could not connect to the workstation")
-			panic(err)
+			err = scmd.Run()
+			if err == nil {
+				return
+			}
+
+			if try == maxRetries-1 {
+				fmt.Println("Could not connect to the workstation")
+				panic(err)
+			}
+
+			fmt.Println("Could not connect to the workstation. Retrying...")
+			util.SleepWithSpinner(5)
 		}
 	},
 }

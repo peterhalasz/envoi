@@ -12,7 +12,7 @@ import (
 
 func (p *DigitalOceanProvider) GetStatus() (*cloud.WorkstationStatus, error) {
 	tag := viper.GetString("digitalocean.tag")
-	log.Debugf("Fetching Droplets by tag: %s", tag)
+	log.Debugf("Fetching Droplet status by tag: %s", tag)
 	droplets, _, err := p.client.Droplets.ListByTag(context.TODO(), tag, nil)
 	if err != nil {
 		return nil, err
