@@ -13,13 +13,12 @@ func init() {
 
 var stopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "Stop a workstation",
-	Long:  `Delete the virtual machine and keep the volumes and snapshots`,
+	Short: "Stop the workstation",
+	Long:  `Delete the virtual machine but keep the volume`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
 
 		workstation_status, err := provider.GetStatus()
-
 		if err != nil {
 			fmt.Println("Error: Querying workstation status")
 			fmt.Println(err)

@@ -34,6 +34,7 @@ var connectCmd = &cobra.Command{
 
 		err = scmd.Run()
 		if err != nil {
+			fmt.Println("Could not connect to the workstation")
 			panic(err)
 		}
 	},

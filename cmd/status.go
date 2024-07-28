@@ -29,8 +29,8 @@ func print_workstation_info(w *cloud.WorkstationStatus) {
 
 var statusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "Print the status of your workstation",
-	Long: `Print the following information of your running workstation:
+	Short: "Print the status of the workstation",
+	Long: `Print the following information of the running workstation:
           ID - The ID of the machine
           Name - The name of the machine
           Memory - Size or RAM

@@ -24,7 +24,7 @@ func (p *DigitalOceanProvider) StopWorkstation(params *cloud.WorkstationStopPara
 	workstation_age_minutes := int(math.Floor(now.Sub(created).Minutes()))
 
 	if workstation_age_minutes < 5 {
-		fmt.Printf("Workstation can't be stopped until at least 5 minutes old. Current age: %d minutes\n", workstation_age_minutes)
+		log.Debugf("Workstation can't be stopped until at least 5 minutes old. Current age: %d minutes\n", workstation_age_minutes)
 		return fmt.Errorf("workstation can't be deleted until at least 5 minutes old. Current age: %d minutes", workstation_age_minutes)
 	}
 

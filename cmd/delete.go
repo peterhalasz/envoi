@@ -16,10 +16,9 @@ func init() {
 
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete a workstation completely",
+	Short: "Delete a workstation",
 	Long: `Delete all the resources that belong to the workstation:
           - Virtual machine
-          - Snapshot(s)
           - Volumes`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
