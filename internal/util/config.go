@@ -28,9 +28,8 @@ func InitConfig() {
 	log.Debug("Reading config")
 	viper.SetConfigName(".envoi.conf")
 	viper.SetConfigType("yaml")
-	//viper.AddConfigPath("/etc/appname/")
-	//viper.AddConfigPath("$HOME/.appname")
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("$HOME/")
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
