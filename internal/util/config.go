@@ -8,6 +8,7 @@ import (
 )
 
 func initDefaultConfigValues() {
+	viper.SetDefault("log.level", "info")
 	viper.SetDefault("ssh.public_key_path", "")
 
 	viper.SetDefault("digitalocean.tag", "envoi")
@@ -22,6 +23,15 @@ func initDefaultConfigValues() {
 	viper.SetDefault("digitalocean.droplet.name", "envoi")
 	viper.SetDefault("digitalocean.droplet.size", "s-1vcpu-512mb-10gb")
 	viper.SetDefault("digitalocean.droplet.image", "ubuntu-23-10-x64")
+}
+
+func initLogger() {
+	switch viper.GetString("log.level") {
+	case "info":
+		log.SetLevel(log.InfoLevel)
+	case "debug":
+		log.SetLevel(log.DebugLevel)
+	}
 }
 
 func InitConfig() {
@@ -40,4 +50,6 @@ func InitConfig() {
 			panic(fmt.Errorf("fatal error config file: %w", err))
 		}
 	}
+
+	initLogger()
 }

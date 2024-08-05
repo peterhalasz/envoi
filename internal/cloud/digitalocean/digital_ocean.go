@@ -13,10 +13,6 @@ import (
 	"github.com/digitalocean/godo"
 )
 
-func init() {
-	log.SetLevel(log.DebugLevel)
-}
-
 type DigitalOceanProvider struct {
 	client *godo.Client
 }
