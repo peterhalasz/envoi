@@ -6,11 +6,51 @@ import (
 
 	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+}
+
+func getSshPublicKeyPath() (string, error) {
+	public_key_path_from_config := viper.GetString("ssh.public_key_path")
+
+	if public_key_path_from_config != "" {
+		log.Debug("Using public key path from config")
+		return public_key_path_from_config, nil
+	}
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Debug("Can't get user home directory")
+		return "", err
+	}
+
+	public_key_path_default := homeDir + "/.ssh/id_rsa.pub"
+
+	log.Debug("Using default public key path")
+	return public_key_path_default, nil
+}
+
+func getSshPublicKey() (string, error) {
+	publicKeyPath, err := getSshPublicKeyPath()
+	if err != nil {
+		log.Debug("Can't get ssh public key path")
+		return "", err
+	}
+
+	log.Debug("Public key path: ", publicKeyPath)
+
+	sshPubKey, err := os.ReadFile(publicKeyPath)
+	if err != nil {
+		log.Debug("Can't read ssh public key")
+		return "", err
+	}
+
+	return string(sshPubKey), nil
 }
 
 var initCmd = &cobra.Command{
@@ -30,15 +70,9 @@ var initCmd = &cobra.Command{
 		if !workstation_status.IsActive {
 			fmt.Println("Creating a workstation")
 
-			homeDir, err := os.UserHomeDir()
+			sshPubKey, err := getSshPublicKey()
 			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			sshPubKey, err := os.ReadFile(homeDir + "/.ssh/id_rsa.pub")
-
-			if err != nil {
+				fmt.Println("Error: Reading ssh public key")
 				fmt.Println(err)
 				return
 			}

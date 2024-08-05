@@ -8,6 +8,8 @@ import (
 )
 
 func initDefaultConfigValues() {
+	viper.SetDefault("ssh.public_key_path", "")
+
 	viper.SetDefault("digitalocean.tag", "envoi")
 	viper.SetDefault("digitalocean.region", "fra1")
 
