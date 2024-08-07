@@ -21,10 +21,10 @@ To build this project, you can follow these steps:
 2. Build the project using the `go build` command:
 
     ```shell
-    go build
+    go build -v -o envoi
     ```
 
-    This will generate an executable file in the current directory.
+    This will generate the executable in the current directory.
 
 3. Run the executable:
 

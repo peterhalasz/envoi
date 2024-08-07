@@ -12,8 +12,6 @@ var rootCmd = &cobra.Command{
 	Use:   "envoi",
 	Short: "envoi - Cloud Workstation Manager",
 	Long:  `envoi - Cloud workstation manager`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
 }
 
 func Execute() {
