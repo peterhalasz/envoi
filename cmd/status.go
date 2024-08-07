@@ -56,7 +56,7 @@ var statusCmd = &cobra.Command{
 		}
 
 		if !workstation_status.IsActive {
-			fmt.Println("No active workstation found")
+			fmt.Println("Error: No active workstation found")
 			return
 		}
 

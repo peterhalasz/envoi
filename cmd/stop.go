@@ -26,18 +26,17 @@ var stopCmd = &cobra.Command{
 		}
 
 		if !workstation_status.IsActive {
-			fmt.Println("No active workstation found")
+			fmt.Println("Error: No active workstation found")
+			return
+		}
+
+		err = provider.StopWorkstation(nil)
+		if err != nil {
+			fmt.Println("Error: Stopping the workstation has failed")
+			fmt.Println(err)
 			return
 		} else {
-			err := provider.StopWorkstation(nil)
-
-			if err != nil {
-				fmt.Println("Stopping the workstation has failed")
-				fmt.Println(err)
-				return
-			} else {
-				fmt.Println("Workstation stopped")
-			}
+			fmt.Println("Workstation stopped")
 		}
 	},
 }
