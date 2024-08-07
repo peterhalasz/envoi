@@ -1,5 +1,8 @@
 # envoi - cloud workstation manager
 
+## Warning
+**This project is currently under development and should not be relied on for any kind of production or critical processes.** There is no guarantee that the resources will be created or deleted as expected. Please use with caution.
+
 ## Description
 
 Sometimes, I need a small Linux VM to test long-running or potentially nasty software.
@@ -33,6 +36,13 @@ To build this project, you can follow these steps:
     ```
 
 ## Usage
+
+### Setup
+You need to have a valid DigitalOcean token to use envoi. You can generate one under [API->Tokens](https://cloud.digitalocean.com/account/api/tokens)
+Once you have the token you need to set up an environment variable with `export DO_TOKEN=<YOUR API TOKEN>`.
+Alternatively paste the token into a file and set up a configuration parameter for `digitalocean.token_path`.
+
+Envoi is going to use your SSH public key from `~/.ssh/id_rsa.pub`. This is configurable with the param `ssh.public_key_path`.
 
 ### Commands
 
