@@ -11,6 +11,8 @@ func initDefaultConfigValues() {
 	viper.SetDefault("log.level", "info")
 	viper.SetDefault("ssh.public_key_path", "")
 
+	viper.SetDefault("digitalocean.token_path", "do_token")
+
 	viper.SetDefault("digitalocean.tag", "envoi")
 	viper.SetDefault("digitalocean.region", "fra1")
 

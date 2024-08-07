@@ -9,6 +9,7 @@ import (
 	"github.com/peterhalasz/envoi/internal/cloud"
 	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/digitalocean/godo"
 )
@@ -74,8 +75,9 @@ func getToken() string {
 	token, err := readTokenFromEnv()
 
 	if err != nil {
-		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file.")
-		token, err = readTokenFromFile("do_token")
+		token_path := viper.GetString("digitalocean.token_path")
+		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file ", token_path)
+		token, err = readTokenFromFile(token_path)
 
 		if err != nil {
 			log.Debug("Can't read DigitalOcean token from file.")
