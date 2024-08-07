@@ -19,46 +19,6 @@ type DigitalOceanProvider struct {
 
 var _ cloud.CloudProvider = &DigitalOceanProvider{}
 
-func readTokenFromFile(filePath string) (string, error) {
-	token, err := os.ReadFile(filePath)
-	if err != nil {
-		return "", err
-	}
-	return string(token), nil
-}
-
-func readTokenFromEnv() (string, error) {
-	token := os.Getenv("DO_TOKEN")
-	if token == "" {
-		return "", errors.New("DO_TOKEN environment variable is not set")
-	}
-	return token, nil
-}
-
-func NewDigitalOceanProvider() *DigitalOceanProvider {
-	p := &DigitalOceanProvider{}
-
-	token, err := readTokenFromEnv()
-
-	if err != nil {
-		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file.")
-		token, err = readTokenFromFile("do_token")
-
-		if err != nil {
-			log.Debug("Can't read DigitalOcean token from file.")
-			panic("Can't read DigitalOcean token from environment or file")
-		}
-
-		log.Debug("DigitalOcean token read from file")
-	}
-
-	client := godo.NewFromToken(token)
-
-	p.client = client
-
-	return p
-}
-
 func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 	log.Debug("Fetching ssh keys for current fingerprint")
 	sshKeyFingerPrint, err := util.GetSshKeyFingerprint(sshPubKey)
@@ -94,10 +54,48 @@ func (p *DigitalOceanProvider) getSshKeyId(sshPubKey string) (int, error) {
 	}
 }
 
-func (p *DigitalOceanProvider) SaveWorkstation(params *cloud.WorkstationSaveParams) error {
-	return errors.New("saving a workstation is not implemented yet")
+func readTokenFromFile(filePath string) (string, error) {
+	token, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(token), nil
 }
 
-func (p *DigitalOceanProvider) ConnectWorkstation(params *cloud.WorkstationConnectParams) error {
-	return errors.New("connecting to a workstation is not implemented yet")
+func readTokenFromEnv() (string, error) {
+	token := os.Getenv("DO_TOKEN")
+	if token == "" {
+		return "", errors.New("DO_TOKEN environment variable is not set")
+	}
+	return token, nil
+}
+
+func getToken() string {
+	token, err := readTokenFromEnv()
+
+	if err != nil {
+		log.Debug("Can't read DigitalOcean token from environment. Trying to read from file.")
+		token, err = readTokenFromFile("do_token")
+
+		if err != nil {
+			log.Debug("Can't read DigitalOcean token from file.")
+			panic("Can't read DigitalOcean token from environment or file")
+		}
+
+		log.Debug("DigitalOcean token read from file")
+	}
+
+	return token
+}
+
+func NewDigitalOceanProvider() *DigitalOceanProvider {
+	p := &DigitalOceanProvider{}
+
+	token := getToken()
+
+	client := godo.NewFromToken(token)
+
+	p.client = client
+
+	return p
 }

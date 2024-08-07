@@ -41,7 +41,7 @@ var connectCmd = &cobra.Command{
 			}
 
 			if try == maxRetries-1 {
-				fmt.Println("Could not connect to the workstation")
+				fmt.Println("Error: Could not connect to the workstation")
 				panic(err)
 			}
 

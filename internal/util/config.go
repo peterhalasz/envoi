@@ -27,10 +27,10 @@ func initDefaultConfigValues() {
 
 func initLogger() {
 	switch viper.GetString("log.level") {
-	case "info":
-		log.SetLevel(log.InfoLevel)
 	case "debug":
 		log.SetLevel(log.DebugLevel)
+	default:
+		log.SetLevel(log.InfoLevel)
 	}
 }
 

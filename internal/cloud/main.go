@@ -4,10 +4,8 @@ type CloudProvider interface {
 	GetStatus() (*WorkstationStatus, error)
 	InitWorkstation(params *WorkstationInitParams) error
 	StartWorkstation(params *WorkstationStartParams) error
-	SaveWorkstation(params *WorkstationSaveParams) error
 	StopWorkstation(params *WorkstationStopParams) error
 	DeleteWorkstation(params *WorkstationDeleteParams) error
-	ConnectWorkstation(params *WorkstationConnectParams) error
 }
 
 type WorkstationInitParams struct {
