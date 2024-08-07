@@ -67,27 +67,27 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		if !workstation_status.IsActive {
-			fmt.Println("Creating a workstation")
+		if workstation_status.IsActive {
+			fmt.Println("Error: There's already an active workstation. envoi does not support multiple workstations (yet).")
+		}
 
-			sshPubKey, err := getSshPublicKey()
-			if err != nil {
-				fmt.Println("Error: Reading ssh public key")
-				fmt.Println(err)
-				return
-			}
+		fmt.Println("Creating a workstation")
 
-			err = provider.InitWorkstation(&cloud.WorkstationInitParams{
-				SshPubKey: string(sshPubKey),
-			})
+		sshPubKey, err := getSshPublicKey()
+		if err != nil {
+			fmt.Println("Error: Reading ssh public key")
+			fmt.Println(err)
+			return
+		}
 
-			if err != nil {
-				fmt.Println("Error: Creating workstation")
-				fmt.Println(err)
-				return
-			}
-		} else {
-			fmt.Println("There's already an active workstation")
+		err = provider.InitWorkstation(&cloud.WorkstationInitParams{
+			SshPubKey: string(sshPubKey),
+		})
+
+		if err != nil {
+			fmt.Println("Error: Creating workstation")
+			fmt.Println(err)
+			return
 		}
 
 		workstation_status, err = provider.GetStatus()
@@ -96,6 +96,7 @@ var initCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
+		fmt.Println("Workstation created")
 		print_workstation_info(workstation_status)
 	},
 }
