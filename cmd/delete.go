@@ -7,11 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Sure bool
-
 func init() {
 	rootCmd.AddCommand(deleteCmd)
-	deleteCmd.Flags().BoolVarP(&Sure, "sure", "s", false, "are you sure?")
 }
 
 var deleteCmd = &cobra.Command{
@@ -19,7 +16,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete a workstation",
 	Long: `Delete all the resources that belong to the workstation:
           - Virtual machine
-          - Volumes`,
+          - Volumes (if any)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
 
@@ -32,22 +29,18 @@ var deleteCmd = &cobra.Command{
 		}
 
 		if !workstation_status.IsActive {
-			fmt.Println("No active workstation found")
+			fmt.Println("Error: No active workstation found")
+			return
+		}
+
+		err = provider.DeleteWorkstation(nil)
+
+		if err != nil {
+			fmt.Println("Error: Deleting the workstation has failed")
+			fmt.Println(err)
 			return
 		} else {
-			if !Sure {
-				fmt.Println("Re-run the command with --sure to delete it")
-			} else {
-				err := provider.DeleteWorkstation(nil)
-
-				if err != nil {
-					fmt.Println("Deleting the workstation has failed")
-					fmt.Println(err)
-					return
-				} else {
-					fmt.Println("Workstation deleted")
-				}
-			}
+			fmt.Println("Workstation deleted")
 		}
 	},
 }

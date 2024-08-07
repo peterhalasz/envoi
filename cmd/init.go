@@ -56,7 +56,7 @@ func getSshPublicKey() (string, error) {
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialise a workstation",
-	Long:  `Creates a new virtual machine and a volume (if requested)`,
+	Long:  `Creates a new virtual machine and a volume (if configured)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
 
