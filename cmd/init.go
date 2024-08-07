@@ -69,6 +69,7 @@ var initCmd = &cobra.Command{
 
 		if workstation_status.IsActive {
 			fmt.Println("Error: There's already an active workstation. envoi does not support multiple workstations (yet).")
+			return
 		}
 
 		fmt.Println("Creating a workstation")
