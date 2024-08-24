@@ -24,7 +24,7 @@ func initDefaultConfigValues() {
 
 	viper.SetDefault("digitalocean.droplet.name", "envoi")
 	viper.SetDefault("digitalocean.droplet.size", "s-1vcpu-512mb-10gb")
-	viper.SetDefault("digitalocean.droplet.image", "ubuntu-23-10-x64")
+	viper.SetDefault("digitalocean.droplet.image", "ubuntu-24-04-x64")
 }
 
 func initLogger() {
