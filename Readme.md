@@ -73,4 +73,4 @@ If you have something bigger in mind, please open an issue and we can discuss it
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE.txt).
