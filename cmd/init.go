@@ -31,7 +31,7 @@ func getSshPublicKeyPath() (string, error) {
 
 	public_key_path_default := homeDir + "/.ssh/id_rsa.pub"
 
-	log.Debug("Using default public key path")
+	log.Debug("Using default public key path", public_key_path_default)
 	return public_key_path_default, nil
 }
 

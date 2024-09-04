@@ -10,6 +10,7 @@ import (
 func initDefaultConfigValues() {
 	viper.SetDefault("log.level", "info")
 	viper.SetDefault("ssh.public_key_path", "")
+	viper.SetDefault("ssh.private_key_path", "")
 
 	viper.SetDefault("digitalocean.token_path", "do_token")
 
