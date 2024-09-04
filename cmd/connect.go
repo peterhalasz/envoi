@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/peterhalasz/envoi/internal/cloud/digitalocean"
+	"github.com/peterhalasz/envoi/internal/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -68,11 +70,6 @@ var connectCmd = &cobra.Command{
 			return
 		}
 
-		if workstation_status.IPv4 == "" {
-			fmt.Println("Error: Workstation does not (yet) have an IP address")
-			return
-		}
-
 		key, err := getSshPrivateKey()
 		if err != nil {
 			log.Fatalf("unable to read private key: %v", err)
@@ -92,42 +89,63 @@ var connectCmd = &cobra.Command{
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
 
-		client, err := ssh.Dial("tcp", fmt.Sprintf("%s:22", workstation_status.IPv4), config)
-		if err != nil {
-			log.Fatalf("unable to connect: %v", err)
+		const maxRetries = 5
+		var client *ssh.Client
+		for try := 0; try < maxRetries; try++ {
+			client, err = ssh.Dial("tcp", fmt.Sprintf("%s:22", workstation_status.IPv4), config)
+			if err == nil {
+				break
+			}
+
+			if try == maxRetries-1 {
+				log.Error(err)
+				panic("Error: Could not connect to the workstation")
+			}
+
+			fmt.Println("Could not connect to the workstation. Retrying...")
+			util.SleepWithSpinner(5)
 		}
 
 		defer client.Close()
 
-		session, err := client.NewSession()
-		if err != nil {
-			log.Fatalf("unable to create session %s", err)
-		}
+		if viper.GetString("ssh.connect_method") == "go" {
+			session, err := client.NewSession()
+			if err != nil {
+				log.Fatalf("unable to create session %s", err)
+			}
 
-		session.Stdout = os.Stdout
-		session.Stderr = os.Stderr
-		in, _ := session.StdinPipe()
+			session.Stdout = os.Stdout
+			session.Stderr = os.Stderr
+			in, _ := session.StdinPipe()
 
-		modes := ssh.TerminalModes{
-			ssh.ECHO:          0,
-			ssh.TTY_OP_ISPEED: 14400,
-			ssh.TTY_OP_OSPEED: 14401,
-		}
+			modes := ssh.TerminalModes{
+				ssh.ECHO:          0,
+				ssh.TTY_OP_ISPEED: 14400,
+				ssh.TTY_OP_OSPEED: 14401,
+			}
 
-		if err := session.RequestPty("xterm", 80, 40, modes); err != nil {
-			log.Fatalf("request for pseudo terminal failed: %s", err)
-		}
+			if err := session.RequestPty("xterm", 80, 40, modes); err != nil {
+				log.Fatalf("request for pseudo terminal failed: %s", err)
+			}
 
-		if err := session.Shell(); err != nil {
-			log.Fatalf("failed to start shell: %s", err)
-		}
+			if err := session.Shell(); err != nil {
+				log.Fatalf("failed to start shell: %s", err)
+			}
 
-		// TODO(How do I exit?)
-		// TODO(Colorful terminal)
-		for {
-			reader := bufio.NewReader(os.Stdin)
-			str, _ := reader.ReadString('\n')
-			fmt.Fprint(in, str)
+			// TODO(How do I exit?)
+			// TODO(Colorful terminal)
+			for {
+				reader := bufio.NewReader(os.Stdin)
+				str, _ := reader.ReadString('\n')
+				fmt.Fprint(in, str)
+			}
+		} else {
+			sshCommand := exec.Command("ssh", fmt.Sprintf("root@%s", workstation_status.IPv4))
+			sshCommand.Stdin = os.Stdin
+			sshCommand.Stdout = os.Stdout
+			sshCommand.Stderr = os.Stderr
+
+			sshCommand.Run()
 		}
 	},
 }

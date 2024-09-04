@@ -9,6 +9,10 @@ import (
 
 func initDefaultConfigValues() {
 	viper.SetDefault("log.level", "info")
+	// "system" to use the ssh on the system
+	// "go" to use the go implementation
+	// "system" is the default, if unset
+	viper.SetDefault("ssh.connect_method", "system")
 	viper.SetDefault("ssh.public_key_path", "")
 	viper.SetDefault("ssh.private_key_path", "")
 
