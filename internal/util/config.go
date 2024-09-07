@@ -52,7 +52,7 @@ func InitConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			panic(fmt.Errorf("config file not found"))
+			log.Debug("Config file not found")
 		} else {
 			panic(fmt.Errorf("fatal error config file: %w", err))
 		}
