@@ -133,7 +133,6 @@ var connectCmd = &cobra.Command{
 			}
 
 			// TODO(How do I exit?)
-			// TODO(Colorful terminal)
 			for {
 				reader := bufio.NewReader(os.Stdin)
 				str, _ := reader.ReadString('\n')

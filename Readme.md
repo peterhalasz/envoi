@@ -24,7 +24,7 @@ To build this project, you can follow these steps:
 2. Build the project using the `go build` command:
 
     ```shell
-    go build -v -o envoi
+    go build
     ```
 
     This will generate the executable in the current directory.
