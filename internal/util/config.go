@@ -21,7 +21,7 @@ func initDefaultConfigValues() {
 	viper.SetDefault("digitalocean.tag", "envoi")
 	viper.SetDefault("digitalocean.region", "fra1")
 
-	viper.SetDefault("digitalocean.volume.enabled", true)
+	viper.SetDefault("digitalocean.volume.enabled", false)
 	viper.SetDefault("digitalocean.volume.name", "envoi")
 	viper.SetDefault("digitalocean.volume.file_system_type", "ext4")
 	viper.SetDefault("digitalocean.volume.file_system_label", "envoi")
