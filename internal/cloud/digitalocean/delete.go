@@ -24,8 +24,8 @@ func (p *DigitalOceanProvider) DeleteWorkstation(params *cloud.WorkstationDelete
 
 	workstation_age_minutes := int(math.Floor(now.Sub(created).Minutes()))
 
-	if workstation_age_minutes < 5 {
-		return fmt.Errorf("workstation can't be deleted until at least 5 minutes old. Current age: %d minutes", workstation_age_minutes)
+	if workstation_age_minutes < MIN_WORKSTATION_AGE_MINUTES {
+		return fmt.Errorf("workstation can't be deleted until at least %d minutes old. Current age: %d minutes", MIN_WORKSTATION_AGE_MINUTES, workstation_age_minutes)
 	}
 
 	if viper.GetBool("digitalocean.volumes.enabled") {

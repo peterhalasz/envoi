@@ -7,6 +7,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const MIN_WORKSTATION_AGE_MINUTES = 3
+
 func waitForWorkstationToBecomeActive(provider DigitalOceanProvider) error {
 	log.Debug("Waiting for workstation to become active")
 	const max_retries = 7
