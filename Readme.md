@@ -46,7 +46,7 @@ Envoi is going to use your SSH public key from `~/.ssh/id_rsa.pub`. This is conf
 
 ### Commands
 
-* `init` - Initializes your workstation
+* `start` - Starts your workstation
     * Creates a new droplet
     * Sets up a new SSH key if none exists
     * Creates and attaches a volume (if configured) to the droplet
@@ -55,9 +55,7 @@ Envoi is going to use your SSH public key from `~/.ssh/id_rsa.pub`. This is conf
     * Unattaches the volume and deletes it (if configured)
 * `stop` - Stop your workstation
     * Deletes the droplet only
-* `start` - Start your workstation
-    * Creates a new droplet
-    * Attaches the existing volume (if configured) to the droplet
+    * Keeps the volume (if configured)
 * `status` - Prints the status of your workstation
 * `connect` - Connects to the workstation via ssh
 

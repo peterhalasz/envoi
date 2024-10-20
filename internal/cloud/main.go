@@ -2,14 +2,9 @@ package cloud
 
 type CloudProvider interface {
 	GetStatus() (*WorkstationStatus, error)
-	InitWorkstation(params *WorkstationInitParams) error
 	StartWorkstation(params *WorkstationStartParams) error
 	StopWorkstation(params *WorkstationStopParams) error
 	DeleteWorkstation(params *WorkstationDeleteParams) error
-}
-
-type WorkstationInitParams struct {
-	SshPubKey string
 }
 
 type WorkstationStartParams struct {

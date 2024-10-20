@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(startCmd)
 }
 
 func getSshPublicKeyPath() (string, error) {
@@ -53,9 +53,9 @@ func getSshPublicKey() (string, error) {
 	return string(sshPubKey), nil
 }
 
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialise a workstation",
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Start a workstation",
 	Long:  `Creates a new virtual machine and a volume (if configured)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := digitalocean.NewDigitalOceanProvider()
@@ -81,7 +81,7 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		err = provider.InitWorkstation(&cloud.WorkstationInitParams{
+		err = provider.StartWorkstation(&cloud.WorkstationStartParams{
 			SshPubKey: string(sshPubKey),
 		})
 
@@ -97,6 +97,7 @@ var initCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
+
 		fmt.Println("Workstation created")
 		print_workstation_info(workstation_status)
 	},

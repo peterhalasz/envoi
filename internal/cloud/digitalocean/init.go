@@ -11,7 +11,7 @@ import (
 	"github.com/digitalocean/godo"
 )
 
-func (p *DigitalOceanProvider) InitWorkstation(params *cloud.WorkstationInitParams) error {
+func (p *DigitalOceanProvider) StartWorkstation(params *cloud.WorkstationStartParams) error {
 	sshKeyId, err := p.getSshKeyId(params.SshPubKey)
 
 	if err != nil {
